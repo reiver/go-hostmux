@@ -16,7 +16,7 @@ type HostHandler interface {
 
 	// Else registers a sub-handler to be haned off to, when
 	// where is no host handler to hand off to.
-	Else(subhandler http.Handler)
+	Else(subhandler http.Handler) HostHandler
 }
 
 
@@ -47,9 +47,11 @@ func (handler *internalHostHandler) Host(subhandler http.Handler, hosts ...strin
 }
 
 
-func (handler *internalHostHandler) Else(subhandler http.Handler) {
+func (handler *internalHostHandler) Else(subhandler http.Handler) HostHandler {
 
 	handler.elseHandler = subhandler
+
+	return handler
 }
 
 
