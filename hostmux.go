@@ -7,30 +7,30 @@ import (
 )
 
 
-type HostHandler interface {
+type EqualsHandler interface {
 	http.Handler
 
 	// Host registers a sub-handler to be handed off to, when
 	// a request comes in with one of the hosts.
-	Host(subhandler http.Handler, hosts ...string) HostHandler
+	Host(subhandler http.Handler, hosts ...string) EqualsHandler
 
 	// Else registers a sub-handler to be haned off to, when
 	// where is no host handler to hand off to.
-	Else(subhandler http.Handler) HostHandler
+	Else(subhandler http.Handler) EqualsHandler
 }
 
 
-type internalHostHandler struct {
+type internalEqualsHandler struct {
 	hostToHandler map[string] http.Handler
 	elseHandler   http.Handler
 }
 
 
-// New creates a new HostHandler.
-func New() HostHandler {
+// NewEquals creates a new EqualsHandler.
+func NewEquals() EqualsHandler {
 	hostToHandler := make(map[string] http.Handler)
 
-	handler := internalHostHandler{
+	handler := internalEqualsHandler{
 		hostToHandler:hostToHandler,
 	}
 
@@ -38,7 +38,7 @@ func New() HostHandler {
 }
 
 
-func (handler *internalHostHandler) Host(subhandler http.Handler, hosts ...string) HostHandler {
+func (handler *internalEqualsHandler) Host(subhandler http.Handler, hosts ...string) EqualsHandler {
 	for _, host := range hosts {
 		handler.hostToHandler[strings.ToLower(host)] = subhandler
 	}
@@ -47,7 +47,7 @@ func (handler *internalHostHandler) Host(subhandler http.Handler, hosts ...strin
 }
 
 
-func (handler *internalHostHandler) Else(subhandler http.Handler) HostHandler {
+func (handler *internalEqualsHandler) Else(subhandler http.Handler) EqualsHandler {
 
 	handler.elseHandler = subhandler
 
@@ -55,7 +55,7 @@ func (handler *internalHostHandler) Else(subhandler http.Handler) HostHandler {
 }
 
 
-func (handler *internalHostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (handler *internalEqualsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Get the host from the HTTP request.
 	//

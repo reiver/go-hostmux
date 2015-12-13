@@ -10,12 +10,12 @@ import (
 )
 
 
-func TestNew(t *testing.T) {
+func TestNewEquals(t *testing.T) {
 
-	handler := New()
+	handler := NewEquals()
 
 	if nil == handler {
-		t.Errorf("Did not expect New() func to return nil, but did.")
+		t.Errorf("Did not expect NewEquals() func to return nil, but did.")
 	}
 
 }
@@ -116,20 +116,20 @@ func TestHost(t *testing.T) {
 
 
 L:	for testNumber, test := range tests {
-		hmux := New()
+		hmux := NewEquals()
 
 		for _, host := range test.Hosts {
 			hmux.Host(nil, host)
 		}
 
-		if expected, actual := len(test.ExpectedHosts), len(hmux.(*internalHostHandler).hostToHandler); expected != actual {
+		if expected, actual := len(test.ExpectedHosts), len(hmux.(*internalEqualsHandler).hostToHandler); expected != actual {
 			t.Errorf("For test #%d, expected %d registered host handlers, but got %d.", testNumber, expected, actual)
 			continue L
 		}
 
 		hadError := false
 		for _, expectedHost := range test.ExpectedHosts {
-			if _, ok := hmux.(*internalHostHandler).hostToHandler[expectedHost]; !ok {
+			if _, ok := hmux.(*internalEqualsHandler).hostToHandler[expectedHost]; !ok {
 				t.Errorf("For test #%d, expected host %q to be registered, but wasn't.", testNumber, expectedHost)
 				hadError = true
 			}
@@ -166,7 +166,7 @@ func TestElse(t *testing.T) {
 
 L:	for testNumber, test := range tests {
 
-		hmux := New()
+		hmux := NewEquals()
 
 
 
@@ -266,7 +266,7 @@ func TestServeHTTP(t *testing.T) {
 
 L:	for testNumber, test := range tests {
 
-		hmux := New()
+		hmux := NewEquals()
 
 		called := map[string]bool{}
 
