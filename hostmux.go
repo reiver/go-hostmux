@@ -70,6 +70,9 @@ func (handler *internalEqualsHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 	}
 
 	host := r.Host
+	if parts := strings.Split(host, ":"); 1 < len(parts) {
+		host = parts[0]
+	}
 	host = strings.ToLower(host)
 
 
